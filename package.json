@@ -1,0 +1,15 @@
+{
+  "name": "json-csv-tool",
+  "version": "1.0.0",
+  "description": "Functions for converting JSON objects to CSV as well as possibility to choose specific fields to convert.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "json",
+    "csv"
+  ],
+  "author": "Tom Randell",
+  "license": "MIT"
+}
