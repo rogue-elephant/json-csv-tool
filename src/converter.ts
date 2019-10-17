@@ -6,31 +6,39 @@ import { JsonToCsvConversionStrategy } from "./models/json-to-csv-conversion-str
  * @class JsonCsvConverter
  */
 export class JsonCsvConverter {
-    public ConvertJsonToCsv = (json: any, conversionStrategy?: JsonToCsvConversionStrategy) => {
+    public convertJsonToCsv = (jsonInput: any, conversionStrategy?: JsonToCsvConversionStrategy) => {
         const csvOutput = new ConvertedCsv();
-        conversionStrategy = conversionStrategy || {};
+        const strategy: JsonToCsvConversionStrategy = conversionStrategy || {};
 
-        // Loop through the object keys and push each into the csv output object
-        // whilst also performing any strategies from the conversionStrategy
-        for (const propertyKey in json) {
-            if (json.hasOwnProperty(propertyKey)) {
-                // See if this property should be skipped based on the strategy
-                if (
-                    (conversionStrategy.blackList && conversionStrategy.blackList.indexOf(propertyKey) > -1)
-                    ||
-                    (conversionStrategy.whiteList && conversionStrategy.whiteList.indexOf(propertyKey) === -1)
-                ) {
-                    continue;
+        // Check if the input is an array of JSON
+        const jsonArray: any[] = Array.isArray(jsonInput) ? jsonInput : [jsonInput];
+
+        // Loop through each JSON object in the array
+        jsonArray.forEach(json => {
+            // Loop through the object keys and push each into the csv output object
+            // whilst also performing any strategies from the conversionStrategy
+            const values = [];
+            for (const propertyKey in json) {
+                if (json.hasOwnProperty(propertyKey)) {
+                    // See if this property should be skipped based on the strategy
+                    if (
+                        (strategy.blackList && strategy.blackList.indexOf(propertyKey) > -1)
+                        ||
+                        (strategy.whiteList && strategy.whiteList.indexOf(propertyKey) === -1)
+                    ) {
+                        continue;
+                    }
+                    const propertyValue = json[propertyKey];
+                    if (csvOutput.columnNames.indexOf(propertyKey) === -1) {
+                        csvOutput.columnNames.push(propertyKey);
+                    }
+
+                    values.push(propertyValue);
                 }
-                const propertyValue = json[propertyKey];
-                const existingKeys = csvOutput.columnNames.filter(columnName => columnName === propertyKey);
-
-                csvOutput.columnNames.push(
-                    `${propertyKey}${existingKeys.length > 0 ? `${existingKeys.length}` : ''}`
-                );
-                csvOutput.values.push(propertyValue);
             }
-        }
+            csvOutput.values.push(values);
+        })
+
         return csvOutput;
     }
 }

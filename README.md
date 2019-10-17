@@ -9,6 +9,8 @@ Provides functions for converting JSON objects to and from CSVs.
 - Write the code to get the test passing, running `npm run test`.
 - Push your branch up and submit a pull request.
 
+Note: I have configured a launch.json for vscode that should allow for playing around with anything in index.ts and hitting f5 to debug.
+
 ## Publishing
 - npm version patch
 - npm publish

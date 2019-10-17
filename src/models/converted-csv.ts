@@ -1,5 +1,12 @@
 export class ConvertedCsv {
     public columnNames: string[] = [];
-    public values: string[] = [];
-    public toFullArray = () => this.columnNames.concat(this.values);
+    public values: string[][] = [];
+    
+    public get csv() : string {
+        let output = this.columnNames.join(',');
+        output += '\r\n';
+        output += this.values.map(x => x.join(',')).join('\r\n');
+
+        return output; 
+    }
 }
