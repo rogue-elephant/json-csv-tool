@@ -2,7 +2,7 @@
  * @export
  * @interface JsonToCsvConversionStrategy
  */
-export interface JsonToCsvConversionStrategy {
+export interface IJsonToCsvConversionStrategy {
     /** Specifies a list of property names from the JSON object to output to the CSV.
      * All other property names will be ignored.
      * @type {string[]}

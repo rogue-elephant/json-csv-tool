@@ -1,14 +1,14 @@
 import { ConvertedCsv } from "./models/converted-csv";
-import { JsonToCsvConversionStrategy } from "./models/json-to-csv-conversion-strategy";
+import { IJsonToCsvConversionStrategy } from "./models/json-to-csv-conversion-strategy";
 
 /** Provides functionality for converting JSON to CSV.
  * @export
  * @class JsonCsvConverter
  */
 export class JsonCsvConverter {
-    public convertJsonToCsv = (jsonInput: any, conversionStrategy?: JsonToCsvConversionStrategy) => {
+    public convertJsonToCsv = (jsonInput: any, conversionStrategy?: IJsonToCsvConversionStrategy) => {
         const csvOutput = new ConvertedCsv();
-        const strategy: JsonToCsvConversionStrategy = conversionStrategy || {};
+        const strategy: IJsonToCsvConversionStrategy = conversionStrategy || {};
 
         // Check if the input is an array of JSON
         const jsonArray: any[] = Array.isArray(jsonInput) ? jsonInput : [jsonInput];
