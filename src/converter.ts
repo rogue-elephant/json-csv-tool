@@ -26,12 +26,7 @@ export class JsonCsvConverter {
                 const existingKeys = csvOutput.columnNames.filter(columnName => columnName === propertyKey);
 
                 csvOutput.columnNames.push(
-                    `${existingKeys.length > 0 ?
-                        (
-                            conversionStrategy.duplicateKeyFormatting ? conversionStrategy.duplicateKeyFormatting(propertyKey, existingKeys.length)
-                                : `${propertyKey}_${existingKeys.length}`
-                        )
-                        : propertyKey}`
+                    `${propertyKey}${existingKeys.length > 0 ? `${existingKeys.length}` : ''}`
                 );
                 csvOutput.values.push(propertyValue);
             }
