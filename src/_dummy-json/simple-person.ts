@@ -19,5 +19,5 @@ export const SimplePersonJson = [
     title: 'Mr',
     department: 'R&D',
     job: 'Project Manager',
-  }
+  },
 ];
