@@ -1,6 +1,7 @@
 export class ConvertedCsv {
   public columnNames: string[] = [];
   public values: string[][] = [];
+  public title?: string;
 
   public get csv(): string {
     let output = this.columnNames.join(',');
