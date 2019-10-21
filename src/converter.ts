@@ -1,6 +1,6 @@
 import { ConvertedCsv, IRowValue } from './models/converted-csv';
-import { IJsonToCsvConversionStrategy } from './models/json-to-csv-conversion-strategy';
 import { isObject } from 'util';
+import { IJsonToCsvConversionStrategy } from './models/json-to-csv-conversion-strategy';
 
 /** Provides functionality for converting JSON to CSV.
  * @export
@@ -38,7 +38,7 @@ export class JsonCsvConverter {
         if (csvOutput.title == null &&
           (
             (strategy.titlePropertyName && strategy.titlePropertyName === propertyKey)
-            || strategy.titlePropertyName == null && ['name', 'description', 'desc'].indexOf(propertyKey) != -1
+            || strategy.titlePropertyName == null && ['name', 'description', 'desc'].indexOf(propertyKey) !== -1
           )
         ) {
           csvOutput.title = propertyValue;
