@@ -1,4 +1,5 @@
-import { ConvertedCsv } from './models/converted-csv';
+import { ConvertedCsv, IRowValue } from './models/converted-csv';
+import { isObject } from 'util';
 import { IJsonToCsvConversionStrategy } from './models/json-to-csv-conversion-strategy';
 
 /** Provides functionality for converting JSON to CSV.
@@ -17,27 +18,57 @@ export class JsonCsvConverter {
     jsonArray.forEach(json => {
       // Loop through the object keys and push each into the csv output object
       // whilst also performing any strategies from the conversionStrategy
-      const values = [];
-      for (const propertyKey in json) {
-        if (json.hasOwnProperty(propertyKey)) {
-          // See if this property should be skipped based on the strategy
-          if (
-            (strategy.blackList && strategy.blackList.indexOf(propertyKey) > -1) ||
-            (strategy.whiteList && strategy.whiteList.indexOf(propertyKey) === -1)
-          ) {
-            continue;
-          }
-          const propertyValue = json[propertyKey];
-          if (csvOutput.columnNames.indexOf(propertyKey) === -1) {
-            csvOutput.columnNames.push(propertyKey);
-          }
+      const row: IRowValue[] = [];
 
-          values.push(propertyValue);
-        }
-      }
-      csvOutput.values.push(values);
+      this.iterateKeys(json, csvOutput, row, strategy);
+
+      csvOutput.rows.push(row);
     });
 
     return csvOutput;
+  };
+
+  private iterateKeys = (
+    json: any,
+    csvOutput: ConvertedCsv,
+    row: IRowValue[],
+    strategy: IJsonToCsvConversionStrategy,
+    prefix?: string,
+  ) => {
+    for (let propertyKey in json) {
+      if (json.hasOwnProperty(propertyKey)) {
+        let propertyValue = json[propertyKey];
+        if (prefix) {
+          propertyKey = `${prefix}_${propertyKey}`;
+        }
+        if (
+          csvOutput.title == null &&
+          ((strategy.titlePropertyName && strategy.titlePropertyName === propertyKey) ||
+            (strategy.titlePropertyName == null && ['name', 'description', 'desc'].indexOf(propertyKey) !== -1))
+        ) {
+          csvOutput.title = propertyValue;
+        }
+
+        // See if this property should be skipped based on the strategy
+        if (
+          (prefix == null && (strategy.blackList && strategy.blackList.indexOf(propertyKey) > -1)) ||
+          (prefix == null && (strategy.whiteList && strategy.whiteList.indexOf(propertyKey) === -1))
+        ) {
+          continue;
+        }
+
+        if (isObject(propertyValue)) {
+          this.iterateKeys(propertyValue, csvOutput, row, strategy, propertyKey);
+          continue;
+        } else if (Array.isArray(propertyValue)) {
+          propertyValue = propertyValue.join(';');
+        }
+        if (csvOutput.columnNames.indexOf(propertyKey) === -1) {
+          csvOutput.columnNames.push(propertyKey);
+        }
+
+        row.push({ columnName: propertyKey, value: propertyValue });
+      }
+    }
   };
 }
