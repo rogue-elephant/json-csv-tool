@@ -18,7 +18,7 @@ export interface IJsonToCsvConversionStrategy {
   blackList?: string[];
 
   /** Specify a Json property that can be used to determine a title for the output.
-   * Can be used for a filename when creating a file etc. 
+   * Can be used for a filename when creating a file etc.
    * @type {string}
    * @memberof IJsonToCsvConversionStrategy
    */

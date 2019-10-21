@@ -28,18 +28,23 @@ export class JsonCsvConverter {
     return csvOutput;
   };
 
-  private iterateKeys = (json: any, csvOutput: ConvertedCsv, row: IRowValue[], strategy: IJsonToCsvConversionStrategy, prefix?: string) => {
+  private iterateKeys = (
+    json: any,
+    csvOutput: ConvertedCsv,
+    row: IRowValue[],
+    strategy: IJsonToCsvConversionStrategy,
+    prefix?: string,
+  ) => {
     for (let propertyKey in json) {
       if (json.hasOwnProperty(propertyKey)) {
         let propertyValue = json[propertyKey];
-        if(prefix) {
+        if (prefix) {
           propertyKey = `${prefix}_${propertyKey}`;
         }
-        if (csvOutput.title == null &&
-          (
-            (strategy.titlePropertyName && strategy.titlePropertyName === propertyKey)
-            || strategy.titlePropertyName == null && ['name', 'description', 'desc'].indexOf(propertyKey) !== -1
-          )
+        if (
+          csvOutput.title == null &&
+          ((strategy.titlePropertyName && strategy.titlePropertyName === propertyKey) ||
+            (strategy.titlePropertyName == null && ['name', 'description', 'desc'].indexOf(propertyKey) !== -1))
         ) {
           csvOutput.title = propertyValue;
         }
@@ -62,8 +67,8 @@ export class JsonCsvConverter {
           csvOutput.columnNames.push(propertyKey);
         }
 
-        row.push({columnName: propertyKey, value: propertyValue});
+        row.push({ columnName: propertyKey, value: propertyValue });
       }
     }
-  }
+  };
 }
