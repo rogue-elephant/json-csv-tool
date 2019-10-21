@@ -1,4 +1,4 @@
-import { ConvertedCsv } from './models/converted-csv';
+import { ConvertedCsv, IRowValue } from './models/converted-csv';
 import { IJsonToCsvConversionStrategy } from './models/json-to-csv-conversion-strategy';
 import { isObject } from 'util';
 
@@ -18,20 +18,23 @@ export class JsonCsvConverter {
     jsonArray.forEach(json => {
       // Loop through the object keys and push each into the csv output object
       // whilst also performing any strategies from the conversionStrategy
-      const values: string[] = [];
+      const row: IRowValue[] = [];
 
-      this.iterateKeys(json, csvOutput, values, strategy);
+      this.iterateKeys(json, csvOutput, row, strategy);
 
-      csvOutput.values.push(values);
+      csvOutput.rows.push(row);
     });
 
     return csvOutput;
   };
 
-  private iterateKeys = (json: any, csvOutput: ConvertedCsv, values: string[], strategy: IJsonToCsvConversionStrategy, prefix?: string) => {
-    for (const propertyKey in json) {
+  private iterateKeys = (json: any, csvOutput: ConvertedCsv, row: IRowValue[], strategy: IJsonToCsvConversionStrategy, prefix?: string) => {
+    for (let propertyKey in json) {
       if (json.hasOwnProperty(propertyKey)) {
         let propertyValue = json[propertyKey];
+        if(prefix) {
+          propertyKey = `${prefix}_${propertyKey}`;
+        }
         if (csvOutput.title == null &&
           (
             (strategy.titlePropertyName && strategy.titlePropertyName === propertyKey)
@@ -50,7 +53,7 @@ export class JsonCsvConverter {
         }
 
         if (isObject(propertyValue)) {
-          this.iterateKeys(propertyValue, csvOutput, values, strategy, propertyKey);
+          this.iterateKeys(propertyValue, csvOutput, row, strategy, propertyKey);
           continue;
         } else if (Array.isArray(propertyValue)) {
           propertyValue = propertyValue.join(';');
@@ -59,7 +62,7 @@ export class JsonCsvConverter {
           csvOutput.columnNames.push(propertyKey);
         }
 
-        values.push(propertyValue);
+        row.push({columnName: propertyKey, value: propertyValue});
       }
     }
   }
