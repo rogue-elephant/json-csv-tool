@@ -3,7 +3,6 @@ export { IJsonToCsvConversionStrategy } from './models/json-to-csv-conversion-st
 export { JsonCsvConverter } from './converter';
 
 // import { JsonCsvConverter } from './converter';
-// import { trelloJson } from './_dummy-json/sensitive/trello';
 // import { DeeperPersonJson } from './_dummy-json/deeper-person';
 // const converter = new JsonCsvConverter();
 // const deeperInput = converter.convertJsonToCsv(DeeperPersonJson);

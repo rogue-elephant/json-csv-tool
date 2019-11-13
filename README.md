@@ -2,6 +2,9 @@
 ## Description
 Provides functions for converting JSON objects to and from CSVs.
 
+## Try me out
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io#snapshot/370f4828-27b2-4ffb-bb8e-c79175380463)
+
 # Usage
 ## Simple Example
 ``` typescript
