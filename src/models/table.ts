@@ -18,14 +18,18 @@ export class Table {
             .join(','),
         )
         .join('\r\n');
-    }
+    };
     outputTable(this);
-    this.rows.reduce((acc, row) => row.filter(x => x.linkedTable != null), [])
-    .map(row => row.linkedTable)
-    .forEach(table => {
-      table = (table as Table);
-      output += `\r\n\r\n${table.title}\r\n${table.csv}`});
-    
+    this.rows
+      .filter(row => row.filter(x => x.linkedTable != null).length > 0)
+      .map(row => row.filter(x => x.linkedTable != null).map(x => x.linkedTable))
+      .forEach(tableList => {
+        tableList.forEach(table => {
+          table = table as Table;
+          output += `\r\n\r\n${table.title}\r\n${table.csv}`;
+        });
+      });
+
     return output;
   }
 }
@@ -33,5 +37,5 @@ export class Table {
 export interface IRowValue {
   columnName: string;
   value: string;
-  linkedTable?: Table
+  linkedTable?: Table;
 }

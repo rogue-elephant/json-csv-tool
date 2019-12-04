@@ -84,7 +84,11 @@ export class JsonCsvConverter {
           table.columnNames.push(propertyKey);
         }
 
-        row.push({ columnName: propertyKey, value: propertyValue, linkedTable });
+        const rowValues: IRowValue = { columnName: propertyKey, value: propertyValue };
+        if(linkedTable)
+          rowValues.linkedTable = linkedTable;
+
+        row.push(rowValues);
       }
     }
   };
