@@ -9,8 +9,6 @@ import figlet = require('figlet');
 import program = require('commander');
 import fs = require('fs');
 import { JsonCsvConverter } from './converter';
-import { trelloJson } from './_dummy-json/sensitive/trello';
-import { DeeperPersonJson } from './_dummy-json/deeper-person';
 
 console.log(
     chalk.red(
@@ -28,7 +26,6 @@ program
 
 console.log(`Processing ${program.input}. CSV Output:`);
 
-const result = new JsonCsvConverter().convertJsonToCsv(DeeperPersonJson);
 if (program.input) {
     const file = JSON.parse(fs.readFileSync(program.input, 'utf8'));
     const converter = new JsonCsvConverter();

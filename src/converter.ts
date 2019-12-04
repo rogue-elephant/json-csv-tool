@@ -1,5 +1,6 @@
 import { Table, IRowValue } from './models/table';
 import { IJsonToCsvConversionStrategy } from './models/json-to-csv-conversion-strategy';
+import { access } from 'fs';
 
 /** Provides functionality for converting JSON to CSV.
  * @export
