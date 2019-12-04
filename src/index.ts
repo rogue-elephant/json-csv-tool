@@ -27,7 +27,7 @@ program
 
 console.log(`Processing ${program.input}. CSV Output:`);
 
-const result = new JsonCsvConverter().convertJsonToCsv(trelloJson, {whiteList: ["name", "cards"]});
+const result = new JsonCsvConverter().convertJsonToCsv(trelloJson, {whiteList: ["name", "cards","cards>name", "cards>desc", "cards>id"]});
 
 if (program.input) {
     const file = JSON.parse(fs.readFileSync(program.input, 'utf8'));
