@@ -10,11 +10,7 @@ import program = require('commander');
 import fs = require('fs');
 import { JsonCsvConverter } from './converter';
 
-console.log(
-    chalk.red(
-      figlet.textSync('json-csv-tool', { horizontalLayout: 'full' })
-    )
-  );
+console.log(chalk.red(figlet.textSync('json-csv-tool', { horizontalLayout: 'full' })));
 
 program
   .version('1.1.6')
@@ -27,11 +23,11 @@ program
 console.log(`Processing ${program.input}. CSV Output:`);
 
 if (program.input) {
-    const file = JSON.parse(fs.readFileSync(program.input, 'utf8'));
-    const converter = new JsonCsvConverter();
-    console.log(converter.convertJsonToCsv(file, {blackList: program.blacklist, whiteList: program.whitelist}).csv);
+  const file = JSON.parse(fs.readFileSync(program.input, 'utf8'));
+  const converter = new JsonCsvConverter();
+  console.log(converter.convertJsonToCsv(file, { blackList: program.blacklist, whiteList: program.whitelist }).csv);
 }
 
 if (!process.argv.slice(2).length) {
-	program.outputHelp();
+  program.outputHelp();
 }
