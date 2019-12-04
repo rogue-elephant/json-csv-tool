@@ -34,7 +34,7 @@ export class JsonCsvConverter {
     row: IRowValue[],
     strategy: IJsonToCsvConversionStrategy,
     prefix: string = '',
-    nestedLevel: number = 0
+    nestedLevel: number = 0,
   ) => {
     for (let propertyKey in json) {
       if (json.hasOwnProperty(propertyKey)) {
@@ -53,8 +53,8 @@ export class JsonCsvConverter {
 
         // See if this property should be skipped based on the strategy
         if (
-          nestedLevel === 0 &&
-          (prefix === '' && (strategy.blackList && strategy.blackList.indexOf(fullPropName) > -1)) ||
+          (nestedLevel === 0 &&
+            (prefix === '' && (strategy.blackList && strategy.blackList.indexOf(fullPropName) > -1))) ||
           (prefix === '' && (strategy.whiteList && strategy.whiteList.indexOf(fullPropName) === -1))
         ) {
           continue;
@@ -62,32 +62,34 @@ export class JsonCsvConverter {
 
         let linkedTable: any = null;
 
-        if(propertyValue) {
+        if (propertyValue) {
           if (Object.getPrototypeOf(propertyValue) === Object.prototype) {
-            this.iterateKeys(propertyValue, table, row, strategy, propertyKey, nestedLevel+1);
+            this.iterateKeys(propertyValue, table, row, strategy, propertyKey, nestedLevel + 1);
             continue;
           } else if (Array.isArray(propertyValue)) {
-            if((propertyValue as any[]).filter(x => Object.getPrototypeOf(x) === Object.prototype).length > 0) {
+            if ((propertyValue as any[]).filter(x => Object.getPrototypeOf(x) === Object.prototype).length > 0) {
               linkedTable = new Table();
               linkedTable.title = propertyKey;
               propertyValue.forEach(x => {
                 const oneToManyTableRow: IRowValue[] = [];
-                this.iterateKeys(x, linkedTable, oneToManyTableRow, strategy, '', nestedLevel+1);
+                this.iterateKeys(x, linkedTable, oneToManyTableRow, strategy, '', nestedLevel + 1);
                 linkedTable.rows.push(oneToManyTableRow);
               });
               propertyValue = linkedTable.rows.length;
-            } else
+            } else {
               propertyValue = propertyValue.join(';');
+            }
           }
         }
-        
+
         if (table.columnNames.indexOf(propertyKey) === -1) {
           table.columnNames.push(propertyKey);
         }
 
         const rowValues: IRowValue = { columnName: propertyKey, value: propertyValue };
-        if(linkedTable)
+        if (linkedTable) {
           rowValues.linkedTable = linkedTable;
+        }
 
         row.push(rowValues);
       }
