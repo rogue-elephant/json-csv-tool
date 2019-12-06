@@ -22,7 +22,9 @@ export class JsonCsvConverter {
 
       this.iterateKeys(json, table, row, strategy);
 
-      table.rows.push(row);
+      if (row.length > 0) {
+        table.rows.push(row);
+      }
     });
 
     return table;
@@ -40,22 +42,25 @@ export class JsonCsvConverter {
       if (json.hasOwnProperty(propertyKey)) {
         let propertyValue = json[propertyKey];
         if (prefix) {
-          propertyKey = `${prefix}>${propertyKey}`;
+          propertyKey = `${prefix}.${propertyKey}`;
         }
-        const fullPropName = nestedLevel > 0 ? `${table.title}>${propertyKey}` : propertyKey;
+        const fullPropName = nestedLevel > 0 ? `${table.title}.${propertyKey}` : propertyKey;
         if (
           table.title == null &&
           ((strategy.titlePropertyName && strategy.titlePropertyName === propertyKey) ||
-            (strategy.titlePropertyName == null && ['name', 'description', 'desc'].indexOf(propertyKey) !== -1))
+            (strategy.titlePropertyName == null && ['name', 'description', 'desc', 'title'].indexOf(propertyKey) !== -1))
         ) {
           table.title = propertyValue;
         }
 
         // See if this property should be skipped based on the strategy
         if (
-          (nestedLevel === 0 &&
-            (prefix === '' && (strategy.blackList && strategy.blackList.indexOf(fullPropName) > -1))) ||
-          (prefix === '' && (strategy.whiteList && strategy.whiteList.indexOf(fullPropName) === -1))
+          (strategy.blackList &&
+            (strategy.blackList.indexOf(fullPropName) > -1 || strategy.blackList.indexOf(`${table.title}.*`) > -1)) ||
+          (strategy.whiteList &&
+            (strategy.whiteList.indexOf(fullPropName) === -1 &&
+              strategy.whiteList.indexOf(`${table.title}.*`) === -1) &&
+            strategy.whiteList.filter(x => x.indexOf(`${propertyKey}.`) > -1).length < 1)
         ) {
           continue;
         }
@@ -73,7 +78,9 @@ export class JsonCsvConverter {
               propertyValue.forEach(x => {
                 const oneToManyTableRow: IRowValue[] = [];
                 this.iterateKeys(x, linkedTable, oneToManyTableRow, strategy, '', nestedLevel + 1);
-                linkedTable.rows.push(oneToManyTableRow);
+                if(oneToManyTableRow.length > 0) {
+                  linkedTable.rows.push(oneToManyTableRow);
+                }
               });
               propertyValue = linkedTable.rows.length;
             } else {

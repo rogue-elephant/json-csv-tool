@@ -5,7 +5,7 @@
 export interface IJsonToCsvConversionStrategy {
   /** Specifies a list of property names from the JSON object to output to the CSV.
    * All other property names will be ignored.
-   * Can use '>' operator to denote child relationship, e.g. ['cards>id', 'cards>desc']
+   * Can use dot notation '.' operator to denote child relationship, e.g. ['cards.id', 'cards.desc', 'people.*']
    * @type {string[]}
    * @memberof IJsonToCsvConversionStrategy
    */
@@ -13,7 +13,7 @@ export interface IJsonToCsvConversionStrategy {
 
   /** Specifies a list of property names from the JSON object to NOT output to the CSV.
    * All other property names will be output.
-   * Can use '>' operator to denote child relationship, e.g. ['cards>id', 'cards>desc']
+   * Can use dot notation '.' operator to denote child relationship, e.g. ['cards.id', 'cards.desc', 'people.*']
    * @type {string[]}
    * @memberof IJsonToCsvConversionStrategy
    */
