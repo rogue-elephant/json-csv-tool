@@ -48,7 +48,8 @@ export class JsonCsvConverter {
         if (
           table.title == null &&
           ((strategy.titlePropertyName && strategy.titlePropertyName === propertyKey) ||
-            (strategy.titlePropertyName == null && ['name', 'description', 'desc', 'title'].indexOf(propertyKey) !== -1))
+            (strategy.titlePropertyName == null &&
+              ['name', 'description', 'desc', 'title'].indexOf(propertyKey) !== -1))
         ) {
           table.title = propertyValue;
         }
@@ -78,7 +79,7 @@ export class JsonCsvConverter {
               propertyValue.forEach(x => {
                 const oneToManyTableRow: IRowValue[] = [];
                 this.iterateKeys(x, linkedTable, oneToManyTableRow, strategy, '', nestedLevel + 1);
-                if(oneToManyTableRow.length > 0) {
+                if (oneToManyTableRow.length > 0) {
                   linkedTable.rows.push(oneToManyTableRow);
                 }
               });
