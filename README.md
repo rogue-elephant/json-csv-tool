@@ -124,19 +124,15 @@ id,personalInfo_firstName,personalInfo_lastName,personalInfo_title,jobInfo_depar
 */
 ```
 
-## Command Line Util
+## Dot notation
+You can also specify specifc fields to get based on dot notation, such as:
+``` typescript
+new JsonCsvConverter().convertJsonToCsv(apiJson, {whiteList: ['prefs.backgroundImageScaled.url']});
 ```
-path\to\your\json> json-csv-tool -i .\src\_dummy-json\simple-person.json
-    _                                                              _                     _ 
-   (_)  ___    ___    _ __             ___   ___  __   __         | |_    ___     ___   | |
-   | | / __|  / _ \  | '_ \   _____   / __| / __| \ \ / /  _____  | __|  / _ \   / _ \  | |
-   | | \__ \ | (_) | | | | | |_____| | (__  \__ \  \ V /  |_____| | |_  | (_) | | (_) | | |
-  _/ | |___/  \___/  |_| |_|          \___| |___/   \_/            \__|  \___/   \___/  |_|
- |__/
-Processing .\src\_dummy-json\simple-person.json. CSV Output:
-firstName,lastName,title,department,job
-John,Smith,Mr,HR,HR Assistant
-Jane,Doe,Mrs,HR,HR Assistant
+
+Or 
+``` typescript
+new JsonCsvConverter().convertJsonToCsv(apiJson, {whiteList: ['name', 'cards.*']});
 ```
 
 ## Contributing
