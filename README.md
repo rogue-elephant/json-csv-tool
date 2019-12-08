@@ -86,7 +86,7 @@ const html = new OutputGenerator(relationalJson).generateOutput({
   rowStartOutput: '<tr>',
   rowEndOutput: '</tr>',
   tableEndOutput: '</table>',
-  tableSpacing: '<br><br>',
+  tableSpacing: '<br>',
 });
 ```
 
@@ -168,7 +168,6 @@ year,reason
     </tr>
 </table>
 <br>
-<br>
 <h1>Awards</h1>
 <table>
     <tr>
@@ -180,7 +179,6 @@ year,reason
         <td>Best at Everything</td>
     </tr>
 </table>
-<br>
 <br>
 <h1>warnings</h1>
 <table>

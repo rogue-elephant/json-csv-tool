@@ -42,7 +42,7 @@ export class OutputGenerator {
       tableSpacing: '\r\n',
       tableLevelCallback: (output: string, table: RelationalJson) =>
         output +
-        `# ${table.title || tableTitle } <a name="${(table.title || tableTitle).split(' ').join('_')}"></a>\r\n` +
+        `# ${table.title || tableTitle} <a name="${(table.title || tableTitle).split(' ').join('_')}"></a>\r\n` +
         '|' +
         table.columnNames.map(x => '*' + removeUnwantedCharsPfa(x) + '*').join('|') +
         '\r\n' +
@@ -66,31 +66,30 @@ export class OutputGenerator {
       this.relationalJson.rows
         .map(
           row =>
-            options.rowStartOutput ||
-            '' +
-              this.relationalJson.columnNames
-                .map(columnName => {
-                  const foundRowValues = row.filter(x => x.columnName === columnName);
-                  if (foundRowValues.length > 0) {
-                    if (foundRowValues[0].linkedTable != null) {
-                      linkedTables.push(foundRowValues[0].linkedTable);
-                      return options.rowLevelLinkedTableCallback
-                        ? options.rowLevelLinkedTableCallback(foundRowValues[0])
-                        : options.rowLevelCallback
-                        ? options.rowLevelCallback(foundRowValues[0])
-                        : foundRowValues[0].value;
-                    }
-                    return options.rowLevelCallback
+            (options.rowStartOutput || '') +
+            this.relationalJson.columnNames
+              .map(columnName => {
+                const foundRowValues = row.filter(x => x.columnName === columnName);
+                if (foundRowValues.length > 0) {
+                  if (foundRowValues[0].linkedTable != null) {
+                    linkedTables.push(foundRowValues[0].linkedTable);
+                    return options.rowLevelLinkedTableCallback
+                      ? options.rowLevelLinkedTableCallback(foundRowValues[0])
+                      : options.rowLevelCallback
                       ? options.rowLevelCallback(foundRowValues[0])
                       : foundRowValues[0].value;
-                  } else {
-                    return '';
                   }
-                })
-                .join(options.columnSeperator),
+                  return options.rowLevelCallback
+                    ? options.rowLevelCallback(foundRowValues[0])
+                    : foundRowValues[0].value;
+                } else {
+                  return '';
+                }
+              })
+              .join(options.columnSeperator || ' '),
         )
         .join(options.rowEndOutput || '') + options.rowEndOutput || '';
-    output += (options.tableEndOutput || '');
+    output += options.tableEndOutput || '';
     linkedTables.forEach(
       table => (output += (options.tableSpacing || '') + `${new OutputGenerator(table).generateOutput(options)}`),
     );

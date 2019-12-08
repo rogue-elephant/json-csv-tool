@@ -19,7 +19,7 @@ const html = new OutputGenerator(relationalJson).generateOutput({
   rowStartOutput: '<tr>',
   rowEndOutput: '</tr>',
   tableEndOutput: '</table>',
-  tableSpacing: '<br><br>',
+  tableSpacing: '<br>',
 });
 
 const foo = '';
