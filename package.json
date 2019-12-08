@@ -1,6 +1,6 @@
 {
   "name": "json-csv-tool",
-  "version": "1.1.10",
+  "version": "2.0.0",
   "description": "Functions for converting JSON objects to CSV as well as possibility to choose specific fields to convert.",
   "files": [
     "lib/**/*"

@@ -89,7 +89,7 @@ export class OutputGenerator {
               .join(options.columnSeperator || ' '),
         )
         .join(options.rowEndOutput || options.rowSeperator || '') + (options.rowEndOutput || '');
-    output += (options.tableEndOutput || '');
+    output += options.tableEndOutput || '';
     linkedTables.forEach(
       table => (output += (options.tableSpacing || '') + `${new OutputGenerator(table).generateOutput(options)}`),
     );

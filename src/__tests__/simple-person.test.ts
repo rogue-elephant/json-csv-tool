@@ -1,5 +1,5 @@
 import { Converter } from '../converter';
-import { OutputGenerator } from '../models/output-generator'
+import { OutputGenerator } from '../models/output-generator';
 import { SimplePersonJson } from '../_dummy-json/simple-person';
 
 //INDIVIDUAL OBJECT TESTS
@@ -128,7 +128,9 @@ test('CSV output WhiteList', () => {
   const jsonToCsvConversion = new Converter().convertJson(SimplePersonJson, {
     whiteList: ['firstName', 'lastName'],
   });
-  expect(new OutputGenerator(jsonToCsvConversion).generateCsv()).toEqual('firstName,lastName\r\n' + 'John,Smith\r\n' + 'Jane,Doe\r\n' + 'Jack,Doe');
+  expect(new OutputGenerator(jsonToCsvConversion).generateCsv()).toEqual(
+    'firstName,lastName\r\n' + 'John,Smith\r\n' + 'Jane,Doe\r\n' + 'Jack,Doe',
+  );
 });
 
 test('CSV output BlackList', () => {

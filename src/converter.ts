@@ -50,10 +50,10 @@ export class Converter {
         const fullPropName = nestedLevel > 0 ? `${table.title}.${propertyKey}` : propertyKey;
         if (
           table.title == null &&
-          ((strategy.titlePropertyName && strategy.titlePropertyName === propertyKey) )
+          (strategy.titlePropertyName && strategy.titlePropertyName === propertyKey)
           // ||
           //   strategy.titlePropertyName == null)
-            // && ['name', 'description', 'desc', 'title'].indexOf(propertyKey) !== -1
+          // && ['name', 'description', 'desc', 'title'].indexOf(propertyKey) !== -1
         ) {
           table.title = propertyValue;
         }
