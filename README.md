@@ -75,24 +75,23 @@ const deeperPersonJson = [
     },
 ];
 
-const relationalJson: RelationalJson = new Converter().convertJson(deeperPersonJson);
-const csv = relationalJson.generateCsv();
-const markdown = relationalJson.generateMarkdown();
-const html = relationalJson.generateOutput(
-  '',
-  (output: string, table: RelationalJson) =>
+const relationalJson: RelationalJson = new Converter().convertJson(DeeperPersonJson, {});
+const csv = new OutputGenerator(relationalJson).generateCsv();
+const markdown = new OutputGenerator(relationalJson).generateMarkdown();
+const html = new OutputGenerator(relationalJson).generateOutput({
+  columnSeperator: '',
+  tableLevelCallback: (output: string, table: RelationalJson) =>
     output + `<h1>${table.title}</h1>` + '<table><tr>' + table.columnNames.map(x => `<th>${x}</th>`).join('') + '</tr>',
-  (rowCol: IRowValue) => `<td>${rowCol.value}</td>`,
-  undefined,
-  '</tr>',
-  '<tr>',
-  '</table><br><br>'
-);
+  rowLevelCallback: (rowCol: IRowValue) => `<td>${rowCol.value}</td>`,
+  rowStartOutput: '<tr>',
+  rowEndOutput: '</tr>',
+  tableEndOutput: '</table>',
+  tableSpacing: '<br><br>',
+});
 ```
 
 ### CSV Output
 ```
-Converted JSON
 id,personalInfo.firstName,personalInfo.lastName,personalInfo.title,jobInfo.department,jobInfo.title,Awards,warnings
 1,John,Smith,Mr,HR,HR Assistant,1,
 2,Jane,Doe,Mrs,Sales,Sales Executive,,
@@ -194,8 +193,6 @@ year,reason
         <td>Farted in the coffee machine</td>
     </tr>
 </table>
-<br>
-<br>
 ```
 
 ## Dot notation

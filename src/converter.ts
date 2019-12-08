@@ -6,7 +6,11 @@ import { IConversionStrategy } from './models/conversion-strategy';
  * @class Converter
  */
 export class Converter {
-  public convertJson = (jsonInput: any, conversionStrategy?: IConversionStrategy) => {
+  /** Takes in json object and IConversionStrategy for manipulating the data and output
+   * and converts it into a RelationalJson object.
+   * @memberof Converter
+   */
+  public convertJson = (jsonInput: any, conversionStrategy?: IConversionStrategy) : RelationalJson => {
     const table = new RelationalJson();
     const strategy: IConversionStrategy = conversionStrategy || {};
 
