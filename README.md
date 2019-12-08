@@ -21,48 +21,8 @@ Provides functions for converting JSON objects to and from CSVs.
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io#snapshot/370f4828-27b2-4ffb-bb8e-c79175380463)
 
 # Usage
-## Simple Example
-``` typescript
-import { JsonCsvConverter } from "json-csv-tool";
 
-const dummyJson = {
-    firstName: 'Tom',
-    lastName: 'Smith',
-    age: 32
-}
-const dummyJson2 = [
-    {
-        firstName: 'Tom',
-        lastName: 'Smith',
-        age: 32
-    },
-    {
-        firstName: 'John',
-        lastName: 'Locke',
-        age: 63
-    }
-]
-const converter = new JsonCsvConverter();
-const json1 = converter.convertJsonToCsv(dummyJson).csv;
-// firstName,lastName,age
-// Tom,Smith,32
-
-const json2 = converter.convertJsonToCsv(dummyJson2).csv;
-// firstName,lastName,age
-// Tom,Smith,32
-// Jon,Locke,63
-
-const blJson = converter.convertJsonToCsv(dummyJson, {blackList: ['firstName', 'Age']}).csv;
-// lastName
-// Smith
-
-const blJson2 = converter.convertJsonToCsv(dummyJson2, {blackList: ['firstName', 'Age']}).csv;
-// lastName
-// Smith
-// Locke
-```
-
-## Deeper example
+## Example
 ``` typescript
 const deeperPersonJson = [
     {
@@ -115,13 +75,127 @@ const deeperPersonJson = [
     },
 ];
 
-converter.convertJsonToCsv(deeperPersonJson).csv;
-/*
-id,personalInfo_firstName,personalInfo_lastName,personalInfo_title,jobInfo_department,jobInfo_title,Awards_0_year,Awards_0_title,warnings_0_year,warnings_0_reason
-1,John,Smith,Mr,HR,HR Assistant,2016,Best at Everything,,
-2,Jane,Doe,Mrs,Sales,Sales Executive,,,,
-3,John,Doe,Mr,R&D,Data Scientist,,,2016,Farted in the coffee machine
-*/
+const relationalJson: RelationalJson = new Converter().convertJson(deeperPersonJson);
+const csv = relationalJson.generateCsv();
+const markdown = relationalJson.generateMarkdown();
+const html = relationalJson.generateOutput(
+  '',
+  (output: string, table: RelationalJson) =>
+    output + `<h1>${table.title}</h1>` + '<table><tr>' + table.columnNames.map(x => `<th>${x}</th>`).join('') + '</tr>',
+  (rowCol: IRowValue) => `<td>${rowCol.value}</td>`,
+  undefined,
+  '</tr>',
+  '<tr>',
+  '</table><br><br>'
+);
+```
+
+### CSV Output
+```
+Converted JSON
+id,personalInfo.firstName,personalInfo.lastName,personalInfo.title,jobInfo.department,jobInfo.title,Awards,warnings
+1,John,Smith,Mr,HR,HR Assistant,1,
+2,Jane,Doe,Mrs,Sales,Sales Executive,,
+3,John,Doe,Mr,R&D,Data Scientist,,1
+
+Awards
+year,title
+2016,Best at Everything
+
+warnings
+year,reason
+2016,Farted in the coffee machine
+```
+
+### Markdown Output
+----------------------------------------------------------------------------------------------
+# Converted JSON <a name="Converted JSON"></a>
+|*id*|*personalInfo.firstName*|*personalInfo.lastName*|*personalInfo.title*|*jobInfo.department*|*jobInfo.title*|*Awards*|*warnings*
+|---|---|---|---|---|---|---|---
+1|John|Smith|Mr|HR|HR Assistant|[1](#Awards)|
+2|Jane|Doe|Mrs|Sales|Sales Executive||
+3|John|Doe|Mr|R&D|Data Scientist||[1](#warnings)
+
+# Awards <a name="Awards"></a>
+|*year*|*title*
+|---|---
+2016|Best at Everything
+
+# warnings <a name="warnings"></a>
+|*year*|*reason*
+|---|---
+2016|Farted in the coffee machine
+----------------------------------------------------------------------------------------------
+
+### HTML (custom) Output
+``` html
+<h1>Converted JSON</h1>
+<table>
+    <tr>
+        <th>id</th>
+        <th>personalInfo.firstName</th>
+        <th>personalInfo.lastName</th>
+        <th>personalInfo.title</th>
+        <th>jobInfo.department</th>
+        <th>jobInfo.title</th>
+        <th>Awards</th>
+        <th>warnings</th>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>John</td>
+        <td>Smith</td>
+        <td>Mr</td>
+        <td>HR</td>
+        <td>HR Assistant</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>Jane</td>
+        <td>Doe</td>
+        <td>Mrs</td>
+        <td>Sales</td>
+        <td>Sales Executive</td>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td>John</td>
+        <td>Doe</td>
+        <td>Mr</td>
+        <td>R&D</td>
+        <td>Data Scientist</td>
+        <td>1</td>
+    </tr>
+</table>
+<br>
+<br>
+<h1>Awards</h1>
+<table>
+    <tr>
+        <th>year</th>
+        <th>title</th>
+    </tr>
+    <tr>
+        <td>2016</td>
+        <td>Best at Everything</td>
+    </tr>
+</table>
+<br>
+<br>
+<h1>warnings</h1>
+<table>
+    <tr>
+        <th>year</th>
+        <th>reason</th>
+    </tr>
+    <tr>
+        <td>2016</td>
+        <td>Farted in the coffee machine</td>
+    </tr>
+</table>
+<br>
+<br>
 ```
 
 ## Dot notation

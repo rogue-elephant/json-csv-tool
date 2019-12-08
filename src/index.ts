@@ -1,12 +1,23 @@
-import { JsonCsvConverter } from './converter';
+import { Converter } from './converter';
 import { DeeperPersonJson } from './_dummy-json/deeper-person';
-import { trelloJson } from './_dummy-json/sensitive/trello';
+import { RelationalJson, IRowValue, RowLevelCallbackDelegate, TopLevelCallbackDelegate } from './models/relational-json';
 
-export { Table } from './models/table';
-export { IJsonToCsvConversionStrategy } from './models/json-to-csv-conversion-strategy';
-export { JsonCsvConverter } from './converter';
+export { RelationalJson, IRowValue, RowLevelCallbackDelegate, TopLevelCallbackDelegate } from './models/relational-json';
+export { IConversionStrategy } from './models/conversion-strategy';
+export { Converter } from './converter';
 
-const result = new JsonCsvConverter().convertJsonToCsv(trelloJson, {whiteList: ['name', 'desc', 'cards.name', 'cards.desc']});
-const foo = result.getMarkdown();
-const blah = result.getCsv();
-const poop = '';
+const relationalJson: RelationalJson = new Converter().convertJson(DeeperPersonJson, {});
+const csv = relationalJson.generateCsv();
+const markdown = relationalJson.generateMarkdown();
+const html = relationalJson.generateOutput(
+  '',
+  (output: string, table: RelationalJson) =>
+    output + `<h1>${table.title}</h1>` + '<table><tr>' + table.columnNames.map(x => `<th>${x}</th>`).join('') + '</tr>',
+  (rowCol: IRowValue) => `<td>${rowCol.value}</td>`,
+  undefined,
+  '</tr>',
+  '<tr>',
+  '</table><br><br>'
+);
+
+const foo = '';
