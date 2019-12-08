@@ -1,15 +1,18 @@
-import { Table, IRowValue } from './models/table';
-import { IJsonToCsvConversionStrategy } from './models/json-to-csv-conversion-strategy';
-import { access } from 'fs';
+import { RelationalJson, IRowValue } from './models/relational-json';
+import { IConversionStrategy } from './models/conversion-strategy';
 
-/** Provides functionality for converting JSON to CSV.
+/** Provides functionality for converting JSON to a RelationalJson object which can then be used to output to CSV or markdown etc.
  * @export
- * @class JsonCsvConverter
+ * @class Converter
  */
-export class JsonCsvConverter {
-  public convertJsonToCsv = (jsonInput: any, conversionStrategy?: IJsonToCsvConversionStrategy) => {
-    const table = new Table();
-    const strategy: IJsonToCsvConversionStrategy = conversionStrategy || {};
+export class Converter {
+  /** Takes in json object and IConversionStrategy for manipulating the data and output
+   * and converts it into a RelationalJson object.
+   * @memberof Converter
+   */
+  public convertJson = (jsonInput: any, conversionStrategy?: IConversionStrategy): RelationalJson => {
+    const table = new RelationalJson();
+    const strategy: IConversionStrategy = conversionStrategy || {};
 
     // Check if the input is an array of JSON
     const jsonArray: any[] = Array.isArray(jsonInput) ? jsonInput : [jsonInput];
@@ -32,9 +35,9 @@ export class JsonCsvConverter {
 
   private iterateKeys = (
     json: any,
-    table: Table,
+    table: RelationalJson,
     row: IRowValue[],
-    strategy: IJsonToCsvConversionStrategy,
+    strategy: IConversionStrategy,
     prefix: string = '',
     nestedLevel: number = 0,
   ) => {
@@ -47,9 +50,10 @@ export class JsonCsvConverter {
         const fullPropName = nestedLevel > 0 ? `${table.title}.${propertyKey}` : propertyKey;
         if (
           table.title == null &&
-          ((strategy.titlePropertyName && strategy.titlePropertyName === propertyKey) ||
-            (strategy.titlePropertyName == null &&
-              ['name', 'description', 'desc', 'title'].indexOf(propertyKey) !== -1))
+          ((strategy.titlePropertyName && strategy.titlePropertyName === propertyKey) )
+          // ||
+          //   strategy.titlePropertyName == null)
+            // && ['name', 'description', 'desc', 'title'].indexOf(propertyKey) !== -1
         ) {
           table.title = propertyValue;
         }
@@ -74,7 +78,7 @@ export class JsonCsvConverter {
             continue;
           } else if (Array.isArray(propertyValue)) {
             if ((propertyValue as any[]).filter(x => Object.getPrototypeOf(x) === Object.prototype).length > 0) {
-              linkedTable = new Table();
+              linkedTable = new RelationalJson();
               linkedTable.title = propertyKey;
               propertyValue.forEach(x => {
                 const oneToManyTableRow: IRowValue[] = [];

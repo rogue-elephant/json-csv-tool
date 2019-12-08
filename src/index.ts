@@ -1,3 +1,4 @@
-export { Table } from './models/table';
-export { IJsonToCsvConversionStrategy } from './models/json-to-csv-conversion-strategy';
-export { JsonCsvConverter } from './converter';
+export { RelationalJson, IRowValue } from './models/relational-json';
+export { IConversionStrategy } from './models/conversion-strategy';
+export { Converter } from './converter';
+export { OutputGenerator, TableLevelCallback, RowLevelCallbackDelegate } from './models/output-generator';

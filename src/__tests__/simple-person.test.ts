@@ -1,15 +1,16 @@
-import { JsonCsvConverter } from '../converter';
+import { Converter } from '../converter';
+import { OutputGenerator } from '../models/output-generator'
 import { SimplePersonJson } from '../_dummy-json/simple-person';
 
 //INDIVIDUAL OBJECT TESTS
 //-------------------------------------
 test('Individual Object Conversion Column Names', () => {
-  const jsonToCsvConversion = new JsonCsvConverter().convertJsonToCsv(SimplePersonJson[0]);
+  const jsonToCsvConversion = new Converter().convertJson(SimplePersonJson[0]);
   expect(jsonToCsvConversion.columnNames).toStrictEqual(['firstName', 'lastName', 'title', 'department', 'job']);
 });
 
 test('Individual Object Conversion Values', () => {
-  const jsonToCsvConversion = new JsonCsvConverter().convertJsonToCsv(SimplePersonJson[0]);
+  const jsonToCsvConversion = new Converter().convertJson(SimplePersonJson[0]);
   expect(jsonToCsvConversion.rows).toStrictEqual([
     [
       { columnName: 'firstName', value: 'John' },
@@ -22,7 +23,7 @@ test('Individual Object Conversion Values', () => {
 });
 
 test('Individual Object WhiteList', () => {
-  const jsonToCsvConversion = new JsonCsvConverter().convertJsonToCsv(SimplePersonJson[0], {
+  const jsonToCsvConversion = new Converter().convertJson(SimplePersonJson[0], {
     whiteList: ['firstName', 'lastName'],
   });
   expect(jsonToCsvConversion.rows).toStrictEqual([
@@ -31,7 +32,7 @@ test('Individual Object WhiteList', () => {
 });
 
 test('Individual Object BlackList', () => {
-  const jsonToCsvConversion = new JsonCsvConverter().convertJsonToCsv(SimplePersonJson[0], {
+  const jsonToCsvConversion = new Converter().convertJson(SimplePersonJson[0], {
     blackList: ['firstName', 'lastName'],
   });
   expect(jsonToCsvConversion.rows).toStrictEqual([
@@ -46,12 +47,12 @@ test('Individual Object BlackList', () => {
 //MULTIPLE OBJECT TESTS
 //-------------------------------------
 test('Multiple Object Conversion Column Names', () => {
-  const jsonToCsvConversion = new JsonCsvConverter().convertJsonToCsv(SimplePersonJson);
+  const jsonToCsvConversion = new Converter().convertJson(SimplePersonJson);
   expect(jsonToCsvConversion.columnNames).toStrictEqual(['firstName', 'lastName', 'title', 'department', 'job']);
 });
 
 test('Multiple Object Conversion Values', () => {
-  const jsonToCsvConversion = new JsonCsvConverter().convertJsonToCsv(SimplePersonJson);
+  const jsonToCsvConversion = new Converter().convertJson(SimplePersonJson);
   expect(jsonToCsvConversion.rows).toStrictEqual([
     [
       { columnName: 'firstName', value: 'John' },
@@ -78,7 +79,7 @@ test('Multiple Object Conversion Values', () => {
 });
 
 test('Multiple Object WhiteList', () => {
-  const jsonToCsvConversion = new JsonCsvConverter().convertJsonToCsv(SimplePersonJson, {
+  const jsonToCsvConversion = new Converter().convertJson(SimplePersonJson, {
     whiteList: ['firstName', 'lastName'],
   });
   expect(jsonToCsvConversion.rows).toStrictEqual([
@@ -89,7 +90,7 @@ test('Multiple Object WhiteList', () => {
 });
 
 test('Multiple Object BlackList', () => {
-  const jsonToCsvConversion = new JsonCsvConverter().convertJsonToCsv(SimplePersonJson, {
+  const jsonToCsvConversion = new Converter().convertJson(SimplePersonJson, {
     blackList: ['firstName', 'lastName'],
   });
   expect(jsonToCsvConversion.rows).toStrictEqual([
@@ -114,8 +115,8 @@ test('Multiple Object BlackList', () => {
 //CSV OUTPUT TESTS
 //-------------------------------------
 test('CSV output Conversion Values', () => {
-  const jsonToCsvConversion = new JsonCsvConverter().convertJsonToCsv(SimplePersonJson);
-  expect(jsonToCsvConversion.csv).toEqual(
+  const jsonToCsvConversion = new Converter().convertJson(SimplePersonJson);
+  expect(new OutputGenerator(jsonToCsvConversion).generateCsv()).toEqual(
     'firstName,lastName,title,department,job\r\n' +
       'John,Smith,Mr,HR,HR Assistant\r\n' +
       'Jane,Doe,Mrs,HR,HR Assistant\r\n' +
@@ -124,17 +125,17 @@ test('CSV output Conversion Values', () => {
 });
 
 test('CSV output WhiteList', () => {
-  const jsonToCsvConversion = new JsonCsvConverter().convertJsonToCsv(SimplePersonJson, {
+  const jsonToCsvConversion = new Converter().convertJson(SimplePersonJson, {
     whiteList: ['firstName', 'lastName'],
   });
-  expect(jsonToCsvConversion.csv).toEqual('firstName,lastName\r\n' + 'John,Smith\r\n' + 'Jane,Doe\r\n' + 'Jack,Doe');
+  expect(new OutputGenerator(jsonToCsvConversion).generateCsv()).toEqual('firstName,lastName\r\n' + 'John,Smith\r\n' + 'Jane,Doe\r\n' + 'Jack,Doe');
 });
 
 test('CSV output BlackList', () => {
-  const jsonToCsvConversion = new JsonCsvConverter().convertJsonToCsv(SimplePersonJson, {
+  const jsonToCsvConversion = new Converter().convertJson(SimplePersonJson, {
     blackList: ['firstName', 'lastName'],
   });
-  expect(jsonToCsvConversion.csv).toEqual(
+  expect(new OutputGenerator(jsonToCsvConversion).generateCsv()).toEqual(
     'title,department,job\r\n' + 'Mr,HR,HR Assistant\r\n' + 'Mrs,HR,HR Assistant\r\n' + 'Mr,R&D,Project Manager',
   );
 });
