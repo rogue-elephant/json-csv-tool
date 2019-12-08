@@ -1,4 +1,5 @@
 import { Converter } from '../converter';
+import { OutputGenerator } from '../models/output-generator'
 import { SimplePersonJson } from '../_dummy-json/simple-person';
 
 //INDIVIDUAL OBJECT TESTS
@@ -115,7 +116,7 @@ test('Multiple Object BlackList', () => {
 //-------------------------------------
 test('CSV output Conversion Values', () => {
   const jsonToCsvConversion = new Converter().convertJson(SimplePersonJson);
-  expect(jsonToCsvConversion.generateCsv()).toEqual(
+  expect(new OutputGenerator(jsonToCsvConversion).generateCsv()).toEqual(
     'firstName,lastName,title,department,job\r\n' +
       'John,Smith,Mr,HR,HR Assistant\r\n' +
       'Jane,Doe,Mrs,HR,HR Assistant\r\n' +
@@ -127,14 +128,14 @@ test('CSV output WhiteList', () => {
   const jsonToCsvConversion = new Converter().convertJson(SimplePersonJson, {
     whiteList: ['firstName', 'lastName'],
   });
-  expect(jsonToCsvConversion.generateCsv()).toEqual('firstName,lastName\r\n' + 'John,Smith\r\n' + 'Jane,Doe\r\n' + 'Jack,Doe');
+  expect(new OutputGenerator(jsonToCsvConversion).generateCsv()).toEqual('firstName,lastName\r\n' + 'John,Smith\r\n' + 'Jane,Doe\r\n' + 'Jack,Doe');
 });
 
 test('CSV output BlackList', () => {
   const jsonToCsvConversion = new Converter().convertJson(SimplePersonJson, {
     blackList: ['firstName', 'lastName'],
   });
-  expect(jsonToCsvConversion.generateCsv()).toEqual(
+  expect(new OutputGenerator(jsonToCsvConversion).generateCsv()).toEqual(
     'title,department,job\r\n' + 'Mr,HR,HR Assistant\r\n' + 'Mrs,HR,HR Assistant\r\n' + 'Mr,R&D,Project Manager',
   );
 });

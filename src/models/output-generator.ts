@@ -22,7 +22,7 @@ export class OutputGenerator {
     const removeUnwantedCharsPfa = (value: string) => this.removeUnwantedChars(value, [...this.newlineChars, ',']);
     return this.generateOutput({
       columnSeperator: ',',
-      rowEndOutput: '\r\n',
+      rowSeperator: '\r\n',
       tableSpacing: '\r\n',
       tableLevelCallback: (output: string, table: RelationalJson) =>
         output +
@@ -38,7 +38,7 @@ export class OutputGenerator {
     const tableTitle = 'Converted JSON';
     return this.generateOutput({
       columnSeperator: '|',
-      rowEndOutput: '\r\n',
+      rowSeperator: '\r\n',
       tableSpacing: '\r\n',
       tableLevelCallback: (output: string, table: RelationalJson) =>
         output +
@@ -88,7 +88,7 @@ export class OutputGenerator {
               })
               .join(options.columnSeperator || ' '),
         )
-        .join(options.rowEndOutput || '') + (options.rowEndOutput || '');
+        .join(options.rowEndOutput || options.rowSeperator || '') + (options.rowEndOutput || '');
     output += (options.tableEndOutput || '');
     linkedTables.forEach(
       table => (output += (options.tableSpacing || '') + `${new OutputGenerator(table).generateOutput(options)}`),
@@ -109,7 +109,8 @@ export type RowLevelCallbackDelegate = (rowCol: IRowValue) => string;
  * @interface IOutputGeneratorOptions
  */
 export interface IOutputGeneratorOptions {
-  columnSeperator: string;
+  columnSeperator?: string;
+  rowSeperator?: string;
   tableLevelCallback?: TableLevelCallback;
   rowLevelCallback?: RowLevelCallbackDelegate;
   rowLevelLinkedTableCallback?: RowLevelCallbackDelegate;

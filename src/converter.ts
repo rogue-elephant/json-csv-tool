@@ -10,7 +10,7 @@ export class Converter {
    * and converts it into a RelationalJson object.
    * @memberof Converter
    */
-  public convertJson = (jsonInput: any, conversionStrategy?: IConversionStrategy) : RelationalJson => {
+  public convertJson = (jsonInput: any, conversionStrategy?: IConversionStrategy): RelationalJson => {
     const table = new RelationalJson();
     const strategy: IConversionStrategy = conversionStrategy || {};
 
@@ -50,9 +50,10 @@ export class Converter {
         const fullPropName = nestedLevel > 0 ? `${table.title}.${propertyKey}` : propertyKey;
         if (
           table.title == null &&
-          ((strategy.titlePropertyName && strategy.titlePropertyName === propertyKey) ||
-            (strategy.titlePropertyName == null &&
-              ['name', 'description', 'desc', 'title'].indexOf(propertyKey) !== -1))
+          ((strategy.titlePropertyName && strategy.titlePropertyName === propertyKey) )
+          // ||
+          //   strategy.titlePropertyName == null)
+            // && ['name', 'description', 'desc', 'title'].indexOf(propertyKey) !== -1
         ) {
           table.title = propertyValue;
         }

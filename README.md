@@ -76,9 +76,10 @@ const deeperPersonJson = [
 ];
 
 const relationalJson: RelationalJson = new Converter().convertJson(DeeperPersonJson, {});
-const csv = new OutputGenerator(relationalJson).generateCsv();
-const markdown = new OutputGenerator(relationalJson).generateMarkdown();
-const html = new OutputGenerator(relationalJson).generateOutput({
+const outputGenerator = new OutputGenerator(relationalJson);
+const csv = outputGenerator.generateCsv();
+const markdown = outputGenerator.generateMarkdown();
+const html = outputGenerator.generateOutput({
   columnSeperator: '',
   tableLevelCallback: (output: string, table: RelationalJson) =>
     output + `<h1>${table.title}</h1>` + '<table><tr>' + table.columnNames.map(x => `<th>${x}</th>`).join('') + '</tr>',
